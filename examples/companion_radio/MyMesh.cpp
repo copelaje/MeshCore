@@ -1010,6 +1010,14 @@ void MyMesh::begin(bool has_display) {
   _prefs.gps_enabled = constrain(_prefs.gps_enabled, 0, 1);  // Ensure boolean 0 or 1
   _prefs.gps_interval = constrain(_prefs.gps_interval, 0, 86400);  // Max 24 hours
 
+#ifdef CSRA_FORCE_SELECTIVE
+  // Test-build override: hard-enable Companion Selective Repeat. The client command
+  // (CMD_SET_CLIENT_REPEAT_MODE) isn't in released apps yet, so force the mode here on
+  // every boot -- this runs after loadPrefs(), so it overrides both the zeroed default
+  // and any value persisted by a prior firmware. Not defined in normal/upstream builds.
+  _prefs.client_repeat = CLIENT_REPEAT_SELECTIVE;
+#endif
+
 #ifdef BLE_PIN_CODE // 123456 by default
   if (_prefs.ble_pin == 0) {
 #ifdef DISPLAY_CLASS
