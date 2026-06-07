@@ -31,8 +31,9 @@ jobs:
           # Hard-enable Companion Selective Repeat. build.sh appends to this var and
           # PlatformIO applies it to every env, so the flag reaches all companion targets.
           PLATFORMIO_BUILD_FLAGS: -DCSRA_FORCE_SELECTIVE=1
-          # Release-style build (no debug logging), matching build-csra.sh.
-          DISABLE_DEBUG: "1"
+          # NOTE: intentionally not setting DISABLE_DEBUG -- the official release
+          # pipeline doesn't, so these builds match stock firmware apart from the
+          # CSRA flag above (and DISABLE_DEBUG's -UCFG_DEBUG breaks nRF52 builds).
         run: /usr/bin/env bash build.sh build-companion-firmwares
 
       - name: Upload Workflow Artifacts

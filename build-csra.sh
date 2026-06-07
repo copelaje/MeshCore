@@ -62,9 +62,13 @@ branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo '?')"
 echo "Branch:  $branch"
 echo "Version: $VERSION  (build.sh will append -<sha>)"
 
-# These two feed straight into build.sh.
+# Feeds straight into build.sh.
 export FIRMWARE_VERSION="$VERSION"
-export DISABLE_DEBUG=1        # release-style build, no debug logging
+
+# NOTE: deliberately NOT setting DISABLE_DEBUG=1. The official release pipeline
+# doesn't either, so leaving it unset makes these builds identical to stock
+# firmware except for the CSRA flag below -- the one variable we want to test.
+# (It also avoids -UCFG_DEBUG, which breaks every nRF52 build; see build.sh.)
 
 # Hard-enable Companion Selective Repeat in the firmware. build.sh appends to
 # PLATFORMIO_BUILD_FLAGS, and PlatformIO applies this env to every build env, so
